@@ -2,10 +2,11 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from market_config import MARKET_CONFIG, POPULAR_TICKERS
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from typing import List
 from ai_processor import generate_insights
+import yfinance as yf
 import random
 
 # Import from our new files
@@ -86,3 +87,39 @@ def get_popular_tickers(market: str):
 def get_supported_markets():
     """Get all supported markets"""
     return list(MARKET_CONFIG.keys())
+# ====================================================================================
+# Add new endpoint for historical data
+@app.get("/api/ticker/{market}/{ticker_id}/history")
+def get_ticker_history(market: str, ticker_id: str, period: str = "1mo"):
+    """Get historical price data for charting"""
+    try:
+        from market_config import get_full_symbol
+        full_symbol = get_full_symbol(ticker_id, market)
+        
+        ticker = yf.Ticker(full_symbol)
+        history = ticker.history(period=period)
+        
+        if history.empty:
+            return {"error": "No historical data available"}
+        
+        # Convert to list of dictionaries for JSON response
+        historical_data = []
+        for date, row in history.iterrows():
+            historical_data.append({
+                "date": date.isoformat(),
+                "open": round(float(row['Open']), 2),
+                "high": round(float(row['High']), 2),
+                "low": round(float(row['Low']), 2),
+                "close": round(float(row['Close']), 2),
+                "volume": int(row['Volume'])
+            })
+        
+        return {
+            "ticker": ticker_id.upper(),
+            "market": market,
+            "period": period,
+            "data": historical_data
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching historical data: {str(e)}")

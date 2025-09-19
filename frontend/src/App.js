@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import PriceChart from './components/PriceChart';
 
 function App() {
   const [ticker, setTicker] = useState('AAPL');
@@ -7,11 +8,13 @@ function App() {
   const [overviewData, setOverviewData] = useState(null);
   const [newsData, setNewsData] = useState(null);
   const [insightsData, setInsightsData] = useState(null);
+  const [historicalData, setHistoricalData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [availableMarkets, setAvailableMarkets] = useState(['US']);
   const [popularTickers, setPopularTickers] = useState([]);
+  const [chartPeriod, setChartPeriod] = useState('1mo');
 
   // Fetch available markets on component mount
   useEffect(() => {
@@ -51,6 +54,13 @@ function App() {
       const insightsJson = await insightsResponse.json();
       setInsightsData(insightsJson);
 
+      // 4. Fetch Historical Data for Chart
+      const historyResponse = await fetch(`http://localhost:8000/api/ticker/${market}/${ticker}/history?period=${chartPeriod}`);
+      if (historyResponse.ok) {
+        const historyJson = await historyResponse.json();
+        setHistoricalData(historyJson.data || []);
+      }
+
     } catch (e) {
       setError(e.message);
       console.error("Failed to fetch data:", e);
@@ -77,6 +87,10 @@ function App() {
       const baseTicker = popularTickers[0].replace('.NS', '').replace('-USD', '');
       setTicker(baseTicker);
     }
+  };
+
+  const handlePeriodChange = (period) => {
+    setChartPeriod(period);
   };
 
   const getSentimentEmoji = (score) => {
@@ -191,9 +205,78 @@ function App() {
                 </span>
               </div>
             </div>
+{/* Mini Chart Preview */}
+            <div className="mini-chart">
+              <h4>Price Trend</h4>
+              <PriceChart 
+                ticker={ticker} 
+                market={market} 
+                historicalData={historicalData} 
+              />
+            </div>
+
           </section>
         )}
 
+{/* Charts Tab */}
+        {activeTab === 'charts' && (
+          <section className="charts">
+            <h3>Price Charts for {ticker}</h3>
+            
+            {/* Chart Period Selector */}
+            <div className="chart-controls">
+              <label>Time Period: </label>
+              <select 
+                value={chartPeriod} 
+                onChange={(e) => handlePeriodChange(e.target.value)}
+                className="period-selector"
+              >
+                <option value="1wk">1 Week</option>
+                <option value="1mo">1 Month</option>
+                <option value="3mo">3 Months</option>
+                <option value="6mo">6 Months</option>
+                <option value="1y">1 Year</option>
+              </select>
+            </div>
+            
+            {/* Main Chart */}
+            <div className="main-chart">
+              <PriceChart 
+                ticker={ticker} 
+                market={market} 
+                historicalData={historicalData} 
+              />
+            </div>
+            
+            {/* Chart Statistics */}
+            {historicalData && historicalData.length > 0 && (
+              <div className="chart-stats">
+                <div className="stat-card">
+                  <span className="stat-label">Current Price</span>
+                  <span className="stat-value">
+                    {overviewData?.currency === 'INR' ? '₹' : '$'}
+                    {historicalData[historicalData.length - 1]?.close.toFixed(2)}
+                  </span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-label">Period Change</span>
+                  <span 
+                    className="stat-value" 
+                    style={{ color: historicalData[historicalData.length - 1]?.close >= historicalData[0]?.close ? '#4caf50' : '#f44336' }}
+                  >
+                    {overviewData?.currency === 'INR' ? '₹' : '$'}
+                    {(historicalData[historicalData.length - 1]?.close - historicalData[0]?.close).toFixed(2)}
+                  </span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-label">Data Points</span>
+                  <span className="stat-value">{historicalData.length}</span>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+        
         {/* News Tab */}
         {activeTab === 'news' && newsData && (
           <section className="news">

@@ -293,3 +293,91 @@
   color: #666;
   margin-left: 0.5rem;
 }
+
+/* Chart Styles */
+.chart-container {
+  height: 400px;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.mini-chart .chart-container {
+  height: 200px;
+}
+
+.main-chart .chart-container {
+  height: 500px;
+}
+
+.chart-placeholder {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 10px;
+  color: #666;
+}
+
+.chart-controls {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.period-selector {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: white;
+}
+
+.chart-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-card .stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Charts Tab */
+.charts {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Mini Chart in Overview */
+.mini-chart {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.mini-chart h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
