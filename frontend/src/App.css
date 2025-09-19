@@ -252,20 +252,44 @@
     grid-template-columns: 1fr;
   }
 }
+/* Market Selector */
 .market-selector {
   margin: 1rem 0;
+  color: white;
 }
 
-.market-dropdown, .ticker-dropdown {
-  padding: 0.5rem 1rem;
+.market-dropdown {
+  padding: 0.5rem;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  margin: 0 0.5rem;
-  background: white;
+  border-radius: 5px;
+  margin-left: 0.5rem;
 }
 
-.market-selector label {
-  font-weight: bold;
-  margin-right: 0.5rem;
+/* Popular Tickers */
+.popular-tickers {
+  margin: 1rem 0;
+  color: white;
+}
+
+.ticker-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  margin: 0 0.3rem;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ticker-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Currency Display */
+.currency {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 0.5rem;
 }
