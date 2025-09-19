@@ -97,50 +97,127 @@ def fetch_stock_data(ticker_symbol="AAPL", market="US"):
 # 2. FETCH NEWS DATA
 def fetch_news_data(ticker_symbol="AAPL", market="US"):
     print(f"Fetching news for {ticker_symbol} ({market})...")
+        
+    API_KEY = "7d9923d9b71c4a2f9c0f41aa05a88cf3"  
     
-    # Use mock news data since NewsAPI requires a key
-    mock_news = [
-        {
-            "headline": f"{ticker_symbol} Announces New Product Launch",
-            "summary": f"{ticker_symbol} has announced a revolutionary new product that is expected to drive growth in the coming quarters.",
-            "source": "Financial Times",
-            "url": f"https://example.com/news/{ticker_symbol.lower()}-product-launch",
-            "publishedAt": datetime.now(timezone.utc).isoformat(),
-            "symbol": ticker_symbol.upper(),
-            "market": market,
-            "sentimentScore": 0.8
-        },
-        {
-            "headline": f"Analysts Upgrade {ticker_symbol} to Buy Rating",
-            "summary": f"Leading analysts have upgraded {ticker_symbol} from Hold to Buy based on strong quarterly results and positive outlook.",
-            "source": "Wall Street Journal",
-            "url": f"https://example.com/news/{ticker_symbol.lower()}-upgrade",
-            "publishedAt": (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat(),
-            "symbol": ticker_symbol.upper(),
-            "market": market,
-            "sentimentScore": 0.9
-        },
-        {
-            "headline": f"{ticker_symbol} Faces Supply Chain Challenges",
-            "summary": f"{ticker_symbol} reported minor supply chain disruptions that may affect Q4 delivery targets.",
-            "source": "Bloomberg",
-            "url": f"https://example.com/news/{ticker_symbol.lower()}-supply-chain",
-            "publishedAt": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(),
-            "symbol": ticker_symbol.upper(),
-            "market": market,
-            "sentimentScore": -0.3
-        }
-    ]
+    if API_KEY == "YOUR_NEWSAPI_KEY_HERE":
+        print("ERROR: Please get a NewsAPI key from https://newsapi.org/ and update the script.")
+        return create_fallback_news(ticker_symbol, market)
     
-    for article in mock_news:
-        # Insert into MongoDB. update_one with upsert=True prevents duplicates based on URL.
+    try:
+        # Search for news about this ticker
+        search_query = f"{ticker_symbol} stock"
+        if market == "CRYPTO":
+            search_query = f"{ticker_symbol} cryptocurrency"
+        
+        url = f"https://newsapi.org/v2/everything?q={search_query}&language=en&sortBy=publishedAt&pageSize=5&apiKey={API_KEY}"
+        response = requests.get(url)
+        data = response.json()
+        
+        if data['status'] != 'ok' or 'articles' not in data:
+            print("Error fetching from NewsAPI, using fallback data")
+            return create_fallback_news(ticker_symbol, market)
+        
+        articles = data['articles']
+        inserted_count = 0
+        
+        for article in articles:
+            # Structure the data for MongoDB
+            news_document = {
+                "symbol": ticker_symbol.upper(),
+                "market": market,
+                "headline": article['title'],
+                "summary": article['description'] or article['title'],
+                "source": article['source']['name'],
+                "url": article['url'],
+                "publishedAt": article['publishedAt'],
+                "content": article['content'],
+                # sentimentScore will be added later by AI analysis
+            }
+            
+            # Insert into MongoDB
+            news_collection.update_one(
+                {"url": article['url']},
+                {"$set": news_document},
+                upsert=True
+            )
+            inserted_count += 1
+        
+        print(f"Inserted/Updated {inserted_count} real news articles for {ticker_symbol} in {market} market")
+        
+    except Exception as e:
+        print(f"Error fetching news for {ticker_symbol}: {e}")
+        create_fallback_news(ticker_symbol, market)
+
+def create_fallback_news(ticker_symbol, market):
+    """Create fallback mock news if API fails"""
+    print("Creating fallback mock news...")
+    
+    market_specific_news = {
+        "US": [
+            {
+                "headline": f"{ticker_symbol} Quarterly Earnings Beat Expectations",
+                "summary": f"{ticker_symbol} reported better-than-expected quarterly results, driven by strong consumer demand.",
+                "source": "MarketWatch",
+                "url": f"https://example.com/{ticker_symbol}-earnings",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+            },
+            {
+                "headline": f"Analysts Raise Price Target for {ticker_symbol}",
+                "summary": f"Several Wall Street analysts have increased their price targets for {ticker_symbol} following positive guidance.",
+                "source": "Bloomberg",
+                "url": f"https://example.com/{ticker_symbol}-price-target",
+                "publishedAt": (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat(),
+            }
+        ],
+        "INDIA": [
+            {
+                "headline": f"{ticker_symbol} Expands Operations in Indian Market",
+                "summary": f"{ticker_symbol} announces new investments in Indian manufacturing facilities.",
+                "source": "Economic Times",
+                "url": f"https://example.com/{ticker_symbol}-india-expansion",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+            },
+            {
+                "headline": f"{ticker_symbol} Partners with Indian Tech Firms",
+                "summary": f"{ticker_symbol} forms strategic partnerships with leading Indian technology companies.",
+                "source": "Business Standard",
+                "url": f"https://example.com/{ticker_symbol}-india-partnership",
+                "publishedAt": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(),
+            }
+        ],
+        "CRYPTO": [
+            {
+                "headline": f"{ticker_symbol} Adoption Continues to Grow",
+                "summary": f"Major retailers and services continue to adopt {ticker_symbol} payments.",
+                "source": "CoinDesk",
+                "url": f"https://example.com/{ticker_symbol}-adoption",
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+            },
+            {
+                "headline": f"{ticker_symbol} Network Upgrade Completed Successfully",
+                "summary": f"The latest network upgrade for {ticker_symbol} has been successfully implemented.",
+                "source": "CryptoNews",
+                "url": f"https://example.com/{ticker_symbol}-upgrade",
+                "publishedAt": (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat(),
+            }
+        ]
+    }
+    
+    # Use market-specific news templates
+    news_items = market_specific_news.get(market, market_specific_news["US"])
+    
+    for article in news_items:
+        article["symbol"] = ticker_symbol.upper()
+        article["market"] = market
         news_collection.update_one(
             {"url": article['url']},
             {"$set": article},
             upsert=True
         )
-    print(f"Inserted/Updated {len(mock_news)} news articles for {ticker_symbol} in {market} market")
-
+    
+    print(f"Created {len(news_items)} fallback news articles for {ticker_symbol} in {market} market")
+    
 def run_ai_analysis():
     """Run all AI analysis processes"""
     print("Running AI analysis...")
