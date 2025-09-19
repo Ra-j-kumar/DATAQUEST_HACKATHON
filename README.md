@@ -1,18 +1,19 @@
 Output Photos
-<img width="1918" height="999" alt="Screenshot 2025-09-19 175708" src="https://github.com/user-attachments/assets/f8680f1b-aa34-4448-baf8-ba6c5d3aa3fd" />
 
-<img width="1919" height="1008" alt="Screenshot 2025-09-19 175717" src="https://github.com/user-attachments/assets/ddf6e7e9-61b7-465f-b962-40f730c913e3" />
+**US Market**
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/2f071484-6cec-4120-b12e-e65800a94b0c" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/5cb12219-14b9-4a20-90ff-5cf1ce4989e5" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/660b3f4d-5b9c-4cae-8ff9-7e103f74e1c3" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/0d87832b-dbf6-420c-a0e9-a97a47bd7f9e" />
 
-<img width="1917" height="1001" alt="Screenshot 2025-09-19 175725" src="https://github.com/user-attachments/assets/36e81275-3bef-4c0f-9aac-8eae8218c3db" />
+**Indian Market**
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/35209958-1370-44a7-8c5b-438ecce23a43" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/76501375-3da9-4603-b607-a5f5ac456a1f" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/27da4686-c568-40dd-aade-507806568fb7" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/9c137fa3-4f15-44ec-a1af-1e3dad85dbd0" />
 
-<img width="1920" height="1008" alt="Screenshot 2025-09-19 192343" src="https://github.com/user-attachments/assets/a5524014-95f9-4650-88ae-0dd4bbd31014" />
-
-<img width="1920" height="1008" alt="Screenshot 2025-09-19 192352" src="https://github.com/user-attachments/assets/c304e71f-5e26-4222-ae05-f77a609a6a14" />
-
-<img width="1920" height="1008" alt="Screenshot 2025-09-19 192358" src="https://github.com/user-attachments/assets/a7945fe4-abc3-4768-963f-13344295309d" />
-
-<img width="1920" height="1008" alt="Screenshot 2025-09-19 192421" src="https://github.com/user-attachments/assets/58b077ff-7004-4685-93c3-a8524c165422" />
-
-<img width="1920" height="1008" alt="Screenshot 2025-09-19 192429" src="https://github.com/user-attachments/assets/5754bdc6-00f0-41f8-bae9-4d7cf800132c" />
-
-<img width="1920" height="1008" alt="Screenshot 2025-09-19 192436" src="https://github.com/user-attachments/assets/60a7d4b1-81f4-4e93-83fe-d81d95d67680" />
+**CRYPTO Market**
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/16cf624d-7a89-4c06-a075-b485675dcc86" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/8eb8cdd8-12cd-4103-9de6-98575024a36d" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/f6814b5f-ba47-4335-acd1-ac4bde4de24e" />
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/33f6caf6-dc52-40c4-b8ba-16dd5918839d" />
